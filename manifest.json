@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "VN+ Request Logger",
+    "version": "1.0",
+    "description": "Logs all requests ending with .vn and modifies VN articles",
+    "permissions": ["webRequest", "storage", "activeTab", "scripting"],
+    "host_permissions": ["<all_urls>"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.vn.at/*"],
+            "js": ["content.js"],
+            "run_at": "document_idle"
+        }
+    ]
+}
