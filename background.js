@@ -9,7 +9,7 @@ chrome.webRequest.onCompleted.addListener(
     if (loggedUrls.has(requestUrl)) return;
 
     loggedUrls.add(requestUrl);
-    console.log("Intercepted request:", requestUrl);
+    console.log("🔍 Intercepted request:", requestUrl);
 
     try {
       const response = await fetch(requestUrl);
@@ -18,16 +18,15 @@ chrome.webRequest.onCompleted.addListener(
       if (!firstUrlProcessed) {
         firstUrlProcessed = true;
         const extractedText = extractArticleText(text);
+        console.log("📝 Extracted Article Text:\n", extractedText);
 
-        // Sende den extrahierten Text an content.js
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          if (tabs.length > 0) {
-            chrome.tabs.sendMessage(tabs[0].id, { articleText: extractedText });
-          }
+        // Save the extracted text in chrome.storage.local
+        chrome.storage.local.set({ articleText: extractedText }, () => {
+          console.log("💾 Saved articleText to local storage!");
         });
       }
     } catch (error) {
-      console.error("Error fetching response:", error);
+      console.error("❌ Error fetching response:", error);
     }
 
     setTimeout(() => loggedUrls.delete(requestUrl), 60000);
@@ -37,6 +36,6 @@ chrome.webRequest.onCompleted.addListener(
 
 function extractArticleText(html) {
   const matches = html.match(/<p[^>]*>(.*?)<\/p>/g);
-  if (!matches) return "Kein Artikeltext gefunden.";
+  if (!matches) return "⚠️ No article text found.";
   return matches.map(p => p.replace(/<[^>]+>/g, '')).join("\n\n");
 }
