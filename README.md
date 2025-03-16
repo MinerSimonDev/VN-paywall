@@ -51,4 +51,4 @@ This project is open-source and available under the MIT License.
 
 ---
 
-Let me know if you'd like further tweaks!
+For further optimizations, pull requests are welcome.
